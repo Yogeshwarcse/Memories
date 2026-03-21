@@ -17,9 +17,10 @@ interface AddItemModalProps {
   fields: {
     name: string
     label: string
-    type: 'text' | 'textarea' | 'date' | 'url'
+    type: 'text' | 'textarea' | 'date' | 'url' | 'select'
     placeholder?: string
     required?: boolean
+    options?: { label: string; value: string }[]
   }[]
   showTags?: boolean
   tagType?: 'mood' | 'category' | 'both'
@@ -131,10 +132,25 @@ export function AddItemModal({
                     required={field.required}
                     className="w-full min-h-[100px] px-4 py-3 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                   />
+                ) : (field.type as string) === 'select' ? (
+                  <select
+                    id={field.name}
+                    value={formData[field.name] || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
+                    required={field.required}
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled>{field.placeholder || `Select ${field.label}`}</option>
+                    {field.options?.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 ) : (
                   <Input
                     id={field.name}
-                    type={field.type}
+                    type={field.type === 'select' ? 'text' : field.type}
                     value={formData[field.name] || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
                     placeholder={field.placeholder}

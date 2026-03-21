@@ -17,6 +17,7 @@ import type { Snap } from '@/lib/types'
 import { toast } from 'sonner'
 
 import { API_BASE_URL, fetcher } from '@/lib/api-config'
+import { SNAP_ASSETS } from '@/lib/snap-assets'
 
 export default function SnapsPage() {
   const { data, isLoading } = useSWR<Snap[]>('/api/snaps', fetcher)
@@ -33,6 +34,7 @@ export default function SnapsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image: data.image,
+        description: data.description,
         tags: data.tags
       })
     })
@@ -52,6 +54,7 @@ export default function SnapsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           image: data.image,
+          description: data.description,
           tags: data.tags
         })
       })
@@ -209,7 +212,17 @@ export default function SnapsPage() {
         title={editingSnap ? 'Edit Snap' : 'Add New Snap'}
         initialData={editingSnap ? (editingSnap as unknown as Record<string, unknown>) : undefined}
         fields={[
-          { name: 'image', label: 'Image URL', type: 'url', placeholder: 'https://...', required: true }
+          { 
+            name: 'image', 
+            label: 'Select Image', 
+            type: 'select', 
+            required: true,
+            options: SNAP_ASSETS.map(asset => ({
+              label: asset.split('/').pop() || asset,
+              value: asset
+            }))
+          },
+          { name: 'description', label: 'Description', type: 'textarea', placeholder: 'What happened in this moment?', required: true }
         ]}
         tagType="category"
       />

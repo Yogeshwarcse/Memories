@@ -9,6 +9,7 @@ interface TagBadgeProps {
   onClick?: () => void
   removable?: boolean
   onRemove?: () => void
+  className?: string
 }
 
 const tagColors: Record<string, string> = {
@@ -31,7 +32,7 @@ const tagColors: Record<string, string> = {
   special: 'bg-violet-100 text-violet-800 border-violet-200',
 }
 
-export function TagBadge({ tag, selected, onClick, removable, onRemove }: TagBadgeProps) {
+export function TagBadge({ tag, selected, onClick, removable, onRemove, className }: TagBadgeProps) {
   const colorClass = tagColors[tag] || 'bg-secondary text-secondary-foreground border-border'
   
   return (
@@ -43,7 +44,8 @@ export function TagBadge({ tag, selected, onClick, removable, onRemove }: TagBad
         'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border transition-all',
         colorClass,
         onClick && 'cursor-pointer',
-        selected && 'ring-2 ring-primary ring-offset-2'
+        selected && 'ring-2 ring-primary ring-offset-2',
+        className
       )}
     >
       {tag}

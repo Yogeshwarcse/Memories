@@ -25,8 +25,8 @@ export function SnapCard({ snap, onView, onEdit, onDelete, priority = false }: S
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.02 }}
-      className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer"
+      whileHover={{ scale: 1.04, y: -4 }}
+      className="group relative aspect-[4/5] rounded-[2rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300"
       onClick={onView}
     >
       <Image
@@ -76,10 +76,13 @@ export function SnapCard({ snap, onView, onEdit, onDelete, priority = false }: S
         </div>
 
         {/* Bottom row - info */}
-        <div>
+        <div className="space-y-2">
+          <p className="text-white font-medium line-clamp-2 leading-tight drop-shadow-md">
+            {snap.description}
+          </p>
           <div className="flex flex-wrap gap-1">
-            {snap.tags.slice(0, 2).map((tag) => (
-              <TagBadge key={tag} tag={tag} />
+            {snap.tags.slice(0, 3).map((tag) => (
+              <TagBadge key={tag} tag={tag} className="bg-white/20 text-white border-none backdrop-blur-md" />
             ))}
           </div>
         </div>
