@@ -9,9 +9,9 @@ import {
   Calendar, 
   Camera, 
   BookOpen, 
-  Gift,
   Menu,
-  X
+  X,
+  Angry
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -22,7 +22,7 @@ const navItems = [
   { href: '/days', label: 'Days', icon: Calendar },
   { href: '/snaps', label: 'Snaps', icon: Camera },
   { href: '/memories', label: 'Memories', icon: BookOpen },
-  { href: '/things', label: 'Things', icon: Gift },
+  { href: '/any-hate', label: 'Any Hate', icon: Angry },
 ]
 
 export function Navbar() {

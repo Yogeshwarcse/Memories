@@ -26,7 +26,17 @@ export default function SnapsPage() {
   const [selectedSnap, setSelectedSnap] = useState<Snap | null>(null)
   const [activeTag, setActiveTag] = useState<string | null>(null)
 
-  const snaps = Array.isArray(data) ? data : []
+  const fetchedSnaps = Array.isArray(data) ? data : []
+  
+  const staticSnaps: Snap[] = SNAP_ASSETS.map((src, index) => ({
+    id: `static-${index}`,
+    image: src,
+    description: `Snap Memory`,
+    tags: ['Gallery'],
+    createdAt: new Date().toISOString(),
+  }))
+  
+  const snaps = [...staticSnaps, ...fetchedSnaps]
 
   const handleAddSnap = async (data: Record<string, unknown>) => {
     const response = await fetch(`${API_BASE_URL}/api/snaps`, {
@@ -47,6 +57,10 @@ export default function SnapsPage() {
 
   const handleUpdateSnap = async (data: Record<string, unknown>) => {
     if (!editingSnap) return
+    if (editingSnap.id.startsWith('static-')) {
+      toast.error("Static snaps cannot be edited directly.")
+      return
+    }
     try {
       const id = (editingSnap._id || editingSnap.id).split(':')[0]
       const response = await fetch(`${API_BASE_URL}/api/snaps/${id}`, {
@@ -72,6 +86,10 @@ export default function SnapsPage() {
   }
 
   const handleDeleteSnap = async (id: string) => {
+    if (id.startsWith('static-')) {
+      toast.error("Static snaps cannot be deleted directly.")
+      return
+    }
     const sanitizedId = id.split(':')[0]
     const response = await fetch(`${API_BASE_URL}/api/snaps?id=${sanitizedId}`, { method: 'DELETE' })
     if (response.ok) {

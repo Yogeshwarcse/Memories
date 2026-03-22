@@ -9,7 +9,8 @@ import {
   Camera, 
   BookOpen, 
   Gift,
-  Sparkles
+  Sparkles,
+  Angry
 } from 'lucide-react'
 import { Navbar } from '@/components/navbar'
 
@@ -47,11 +48,11 @@ const modules = [
     delay: 0.4
   },
   {
-    href: '/things',
-    title: 'Favorite Things',
-    description: 'Little things that mean so much',
-    icon: Gift,
-    gradient: 'from-emerald-400 to-cyan-400',
+    href: '/any-hate',
+    title: 'Any Hate 😤',
+    description: 'Tap away your stress!',
+    icon: Angry,
+    gradient: 'from-orange-400 to-red-400',
     delay: 0.5
   }
 ]
