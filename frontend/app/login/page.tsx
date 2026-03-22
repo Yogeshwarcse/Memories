@@ -87,6 +87,13 @@ export default function LoginPage() {
             Log In
           </button>
         </form>
+
+        <div className="mt-6 text-center text-sm text-muted-foreground">
+          Don't have an account?{' '}
+          <Link href="/signup" className="text-primary font-medium hover:underline">
+            Sign up
+          </Link>
+        </div>
       </motion.div>
     </div>
   );

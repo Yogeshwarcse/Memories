@@ -105,6 +105,16 @@ export function Navbar() {
                       Log In
                     </motion.button>
                   </Link>
+                  <Link href="/signup">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      Sign Up
+                    </motion.button>
+                  </Link>
                 </>
               ) : (
                 <DropdownMenu>
@@ -196,6 +206,14 @@ export function Navbar() {
                   >
                     <LogIn className="h-5 w-5" />
                     <span className="font-medium">Log In</span>
+                  </Link>
+                  <Link 
+                    href="/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                  >
+                    <UserPlus className="h-5 w-5" />
+                    <span className="font-medium">Sign Up</span>
                   </Link>
                 </>
               ) : (
