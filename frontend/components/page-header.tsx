@@ -12,28 +12,50 @@ interface PageHeaderProps {
 export function PageHeader({ title, subtitle, icon: Icon }: PageHeaderProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.15,
+          },
+        },
+      }}
       className="text-center mb-8"
     >
       {Icon && (
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+          variants={{
+            hidden: { scale: 0.5, rotate: -45, opacity: 0 },
+            visible: { scale: 1, rotate: 0, opacity: 1 },
+          }}
+          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
           className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/20 mb-4"
         >
           <Icon className="h-8 w-8 text-primary" />
         </motion.div>
       )}
-      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2 text-balance">
+      <motion.h1 
+        variants={{
+          hidden: { y: 20, opacity: 0 },
+          visible: { y: 0, opacity: 1 },
+        }}
+        className="text-3xl md:text-4xl font-bold text-foreground mb-2 text-balance"
+      >
         {title}
-      </h1>
+      </motion.h1>
       {subtitle && (
-        <p className="text-muted-foreground text-lg max-w-xl mx-auto text-pretty">
+        <motion.p 
+          variants={{
+            hidden: { y: 20, opacity: 0 },
+            visible: { y: 0, opacity: 1 },
+          }}
+          className="text-muted-foreground text-lg max-w-xl mx-auto text-pretty"
+        >
           {subtitle}
-        </p>
+        </motion.p>
       )}
     </motion.div>
   )
