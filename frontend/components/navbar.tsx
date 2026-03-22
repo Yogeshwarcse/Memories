@@ -11,10 +11,24 @@ import {
   BookOpen, 
   Menu,
   X,
-  Angry
+  Angry,
+  LogIn,
+  LogOut,
+  UserPlus,
+  User,
+  Settings
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/components/auth-provider'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu'
+import { EditProfileModal } from '@/components/edit-profile-modal'
 
 const navItems = [
   { href: '/', label: 'Home', icon: Heart },
@@ -28,6 +42,8 @@ const navItems = [
 export function Navbar() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false)
+  const { user, logout } = useAuth()
 
   return (
     <motion.header
@@ -51,7 +67,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-1 flex-1 justify-center px-4">
             {navItems.map((item) => {
               const isActive = pathname === item.href
               return (
@@ -74,17 +90,67 @@ export function Navbar() {
             })}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl hover:bg-primary/10 transition-colors"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6 text-foreground" />
-            ) : (
-              <Menu className="h-6 w-6 text-foreground" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Desktop Auth Buttons */}
+            <div className="hidden md:flex items-center gap-2">
+              {!user ? (
+                <>
+                  <Link href="/login">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary/10 transition-colors"
+                    >
+                      <LogIn className="h-4 w-4" />
+                      Log In
+                    </motion.button>
+                  </Link>
+                </>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors outline-none cursor-pointer"
+                    >
+                      <User className="h-4 w-4" />
+                      {user.name}
+                    </motion.button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 rounded-xl p-2">
+                    <DropdownMenuItem 
+                      onClick={() => setIsEditProfileOpen(true)}
+                      className="gap-2 cursor-pointer rounded-lg p-2"
+                    >
+                      <Settings className="h-4 w-4" />
+                      Edit Username
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={logout}
+                      className="gap-2 text-destructive focus:text-destructive cursor-pointer rounded-lg p-2"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Log Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl hover:bg-primary/10 transition-colors"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6 text-foreground" />
+              ) : (
+                <Menu className="h-6 w-6 text-foreground" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -118,10 +184,58 @@ export function Navbar() {
                   </Link>
                 )
               })}
+              
+              <div className="h-px w-full bg-border my-2" />
+              
+              {!user ? (
+                <>
+                  <Link 
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 transition-colors"
+                  >
+                    <LogIn className="h-5 w-5" />
+                    <span className="font-medium">Log In</span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="px-4 py-2 mb-2 font-medium text-muted-foreground flex items-center gap-3 border-b border-border pb-4">
+                    <User className="h-5 w-5" />
+                    {user.name}
+                  </div>
+                  <button
+                    onClick={() => {
+                      setIsEditProfileOpen(true)
+                      setMobileMenuOpen(false)
+                    }}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 transition-colors w-full text-left"
+                  >
+                    <Settings className="h-5 w-5" />
+                    <span className="font-medium">Edit Username</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      logout()
+                      setMobileMenuOpen(false)
+                    }}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-destructive hover:bg-destructive/10 transition-colors w-full text-left"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span className="font-medium">Log Out</span>
+                  </button>
+                </>
+              )}
             </div>
           </motion.div>
         )}
       </nav>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal 
+        isOpen={isEditProfileOpen} 
+        onClose={() => setIsEditProfileOpen(false)} 
+      />
     </motion.header>
   )
 }

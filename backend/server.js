@@ -22,6 +22,7 @@ mongoose.connect(MONGODB_URI)
   .catch(err => console.error('Could not connect to MongoDB', err));
 
 // Routes
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/songs', require('./routes/songs'));
 app.use('/api/favorite-days', require('./routes/favorite-days'));
 app.use('/api/snaps', require('./routes/snaps'));

@@ -10,9 +10,23 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { API_BASE_URL } from '@/lib/api-config'
 
+const CHECKIN_QUESTIONS = [
+  "Are you fine now? 😊",
+  "Feeling any better? 🧡",
+  "Did that help let it out?",
+  "Breathe in, breathe out... better? 🍃",
+  "Is the stress fading away?",
+  "Let it all out! You're safe here.",
+  "Still mad? Give me another 10!",
+  "Wow, you really went for it! You okay?",
+  "Hope you're smiling now! ✨",
+  "That looked like it hurt... me! Better now?"
+]
+
 export default function AnyHatePage() {
   const [hits, setHits] = useState<number>(0)
   const [sessionHits, setSessionHits] = useState<number>(0)
+  const [currentQuestion, setCurrentQuestion] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   // Load hits from Backend
@@ -40,8 +54,10 @@ export default function AnyHatePage() {
 
   const handleHit = async () => {
     // Optimistic update
+    const newSessionHits = sessionHits + 1
+    
     setHits(prev => prev + 1)
-    setSessionHits(prev => prev + 1)
+    setSessionHits(newSessionHits)
     
     // Persist to Backend
     try {
@@ -53,10 +69,18 @@ export default function AnyHatePage() {
     // Persist to LocalStorage as backup
     localStorage.setItem('any-hate-hits', (hits + 1).toString())
     
+    // Check-in questions every 10 hits
+    if (newSessionHits > 0 && newSessionHits % 10 === 0) {
+      const q = CHECKIN_QUESTIONS[Math.floor(Math.random() * CHECKIN_QUESTIONS.length)]
+      setCurrentQuestion(q)
+      
+      setTimeout(() => setCurrentQuestion(null), 4000)
+    }
+
     // Fun milestone toasts
-    if (sessionHits + 1 === 10) toast.info('Getting faster! 😤')
-    if (sessionHits + 1 === 50) toast.success('You are on fire! 🔥')
-    if (sessionHits + 1 === 100) toast.success('LEGENDARY STRESS RELIEF! 👑')
+    if (newSessionHits === 10) toast.info('Getting faster! 😤')
+    if (newSessionHits === 50) toast.success('You are on fire! 🔥')
+    if (newSessionHits === 100) toast.success('LEGENDARY STRESS RELIEF! 👑')
   }
 
   const handleReset = async () => {
@@ -114,7 +138,26 @@ export default function AnyHatePage() {
             </div>
 
             {/* The Toy */}
-            <ToyCharacter onHit={handleHit} hitLevel={hitLevel} />
+            <div className="relative">
+              {/* Question Bubble */}
+              <div className="absolute -top-12 left-0 right-0 h-16 pointer-events-none flex items-center justify-center z-20">
+                <AnimatePresence>
+                  {currentQuestion && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, y: -20 }}
+                      className="bg-primary text-primary-foreground px-6 py-3 rounded-2xl shadow-xl font-medium text-center relative"
+                    >
+                      {currentQuestion}
+                      <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-4 h-4 bg-primary rotate-45" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <ToyCharacter onHit={handleHit} hitLevel={hitLevel} />
+            </div>
 
             {/* Actions */}
             <div className="flex flex-col items-center gap-6 mt-12 relative z-10">
