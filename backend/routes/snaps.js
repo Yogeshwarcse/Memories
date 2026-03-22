@@ -15,9 +15,10 @@ router.get('/', async (req, res) => {
 
 // POST
 router.post('/', upload.single('image'), async (req, res) => {
-  let imageUrl = '';
+  let imageUrl = req.body.image || '';
   if (req.file) {
-    imageUrl = `/uploads/${req.file.filename}`;
+    const base64 = req.file.buffer.toString('base64');
+    imageUrl = `data:${req.file.mimetype};base64,${base64}`;
   }
 
   let tags = req.body.tags;
@@ -60,7 +61,10 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       catch { updateData.tags = updateData.tags.split(',').map(tag => tag.trim()); }
     }
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      const base64 = req.file.buffer.toString('base64');
+      updateData.image = `data:${req.file.mimetype};base64,${base64}`;
+    } else if (req.body.image) {
+      updateData.image = req.body.image;
     } else {
       delete updateData.image;
     }

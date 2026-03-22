@@ -148,19 +148,59 @@ export function AddItemModal({
                     ))}
                   </select>
                 ) : field.type === 'file' ? (
-                  <Input
-                    id={field.name}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) {
-                        setFormData(prev => ({ ...prev, [field.name]: file }))
-                      }
-                    }}
-                    required={field.required && !isEditing}
-                    className="cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                  />
+                  <div className="space-y-4">
+                    {formData[field.name] && (
+                      <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border bg-muted/30">
+                        {typeof formData[field.name] === 'string' ? (
+                          <img 
+                            src={formData[field.name]} 
+                            alt="Preview" 
+                            className="w-full h-full object-contain"
+                          />
+                        ) : formData[field.name] instanceof File ? (
+                          <img 
+                            src={URL.createObjectURL(formData[field.name])} 
+                            alt="Preview" 
+                            className="w-full h-full object-contain"
+                            onLoad={(e) => {
+                              // Clean up memory
+                              const target = e.target as HTMLImageElement;
+                              if (target.src.startsWith('blob:')) {
+                                // We can't revoke immediately because it might be needed for re-renders
+                                // but typically you'd handle this in a cleanup effect
+                              }
+                            }}
+                          />
+                        ) : null}
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, [field.name]: undefined }))}
+                          className="absolute top-2 right-2 p-1.5 rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90 transition-colors"
+                          title="Remove image"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+                    
+                    <div className="flex flex-col gap-2">
+                      <Label className="text-xs text-muted-foreground">
+                        {formData[field.name] ? 'Change Image' : 'Upload Image'}
+                      </Label>
+                      <Input
+                        id={`${field.name}-file`}
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) {
+                            setFormData(prev => ({ ...prev, [field.name]: file }))
+                          }
+                        }}
+                        className="cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                      />
+                    </div>
+                  </div>
                 ) : (
                   <Input
                     id={field.name}

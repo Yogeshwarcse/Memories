@@ -24,11 +24,13 @@ interface TimelineCardProps {
 
 export function TimelineCard({ day, index, onEdit, onDelete, priority = false }: TimelineCardProps) {
   const isLeft = index % 2 === 0
-  const imageUrl = day.image?.startsWith('/uploads/') 
-    ? `${API_BASE_URL}${day.image}` 
-    : day.image?.startsWith('/') 
-      ? day.image 
-      : '/placeholder-day.jpg'
+  const imageUrl = day.image?.startsWith('http')
+    ? day.image
+    : day.image?.startsWith('/uploads/') 
+      ? `${API_BASE_URL}${day.image}` 
+      : day.image?.startsWith('/') 
+        ? day.image 
+        : '/placeholder-day.jpg'
 
   return (
     <motion.div

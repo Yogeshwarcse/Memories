@@ -23,11 +23,13 @@ interface MemoryCardProps {
 }
 
 export function MemoryCard({ memory, index, onEdit, onDelete, priority }: MemoryCardProps) {
-  const imageUrl = memory.image?.startsWith('/uploads/') 
-    ? `${API_BASE_URL}${memory.image}` 
-    : memory.image?.startsWith('/') 
-      ? memory.image 
-      : '/placeholder-memory.jpg'
+  const imageUrl = memory.image?.startsWith('http')
+    ? memory.image
+    : memory.image?.startsWith('/uploads/') 
+      ? `${API_BASE_URL}${memory.image}` 
+      : memory.image?.startsWith('/') 
+        ? memory.image 
+        : '/placeholder-memory.jpg'
 
   return (
     <motion.div

@@ -49,7 +49,8 @@ export default function SnapsPage() {
 
   const handleUpdateSnap = async (data: Record<string, any>) => {
     if (!editingSnap) return
-    if (editingSnap.id.startsWith('static-')) {
+    const snapId = (editingSnap._id || editingSnap.id) as string
+    if (snapId?.startsWith('static-')) {
       toast.error("Static snaps cannot be edited directly.")
       return
     }

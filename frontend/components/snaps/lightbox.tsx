@@ -17,7 +17,11 @@ interface LightboxProps {
 export function Lightbox({ snap, snaps, onClose, onNavigate }: LightboxProps) {
   if (!snap) return null
 
-  const imageUrl = snap.image?.startsWith('/uploads/') ? `${API_BASE_URL}${snap.image}` : snap.image
+  const imageUrl = snap.image?.startsWith('http')
+    ? snap.image
+    : snap.image?.startsWith('/uploads/') 
+      ? `${API_BASE_URL}${snap.image}` 
+      : snap.image
 
   const currentIndex = snaps.findIndex(s => s.id === snap.id)
   const hasPrev = currentIndex > 0
