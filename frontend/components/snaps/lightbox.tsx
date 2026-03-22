@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Snap } from '@/lib/types'
+import { API_BASE_URL } from '@/lib/api-config'
 import { TagBadge } from '@/components/tag-badge'
 
 interface LightboxProps {
@@ -15,6 +16,8 @@ interface LightboxProps {
 
 export function Lightbox({ snap, snaps, onClose, onNavigate }: LightboxProps) {
   if (!snap) return null
+
+  const imageUrl = snap.image?.startsWith('/uploads/') ? `${API_BASE_URL}${snap.image}` : snap.image
 
   const currentIndex = snaps.findIndex(s => s.id === snap.id)
   const hasPrev = currentIndex > 0
@@ -79,7 +82,7 @@ export function Lightbox({ snap, snaps, onClose, onNavigate }: LightboxProps) {
         >
           <div className="relative aspect-square md:aspect-video rounded-2xl overflow-hidden">
             <Image
-              src={snap.image}
+              src={imageUrl}
               alt={snap.description}
               fill
               className="object-contain"

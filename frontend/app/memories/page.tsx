@@ -26,16 +26,16 @@ export default function MemoriesPage() {
 
   const memories = Array.isArray(data) ? data : []
 
-  const handleAddMemory = async (data: Record<string, unknown>) => {
+  const handleAddMemory = async (data: Record<string, any>) => {
+    const formData = new FormData()
+    if (data.image) formData.append('image', data.image)
+    if (data.description) formData.append('description', data.description)
+    if (data.date) formData.append('date', data.date)
+    if (data.tags) formData.append('tags', JSON.stringify(data.tags))
+
     const response = await fetch(`${API_BASE_URL}/api/memories`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        image: data.image,
-        description: data.description,
-        date: data.date,
-        tags: data.tags
-      })
+      body: formData
     })
 
     if (response.ok) {
@@ -44,19 +44,19 @@ export default function MemoriesPage() {
     }
   }
 
-  const handleUpdateMemory = async (data: Record<string, unknown>) => {
+  const handleUpdateMemory = async (data: Record<string, any>) => {
     if (!editingMemory) return
     try {
       const id = (editingMemory._id || editingMemory.id).split(':')[0]
+      const formData = new FormData()
+      if (data.image) formData.append('image', data.image)
+      if (data.description) formData.append('description', data.description)
+      if (data.date) formData.append('date', data.date)
+      if (data.tags) formData.append('tags', JSON.stringify(data.tags))
+
       const response = await fetch(`${API_BASE_URL}/api/memories/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          image: data.image,
-          description: data.description,
-          date: data.date,
-          tags: data.tags
-        })
+        body: formData
       })
       
       if (response.ok) {
@@ -256,7 +256,7 @@ export default function MemoriesPage() {
         initialData={editingMemory ? (editingMemory as unknown as Record<string, unknown>) : undefined}
         fields={[
           { name: 'date', label: 'When did this happen?', type: 'date', required: true },
-          { name: 'image', label: 'Image URL', type: 'url', placeholder: 'https://...' },
+          { name: 'image', label: 'Upload Image', type: 'file', required: true },
           { name: 'description', label: 'Tell the story', type: 'textarea', placeholder: 'What happened? How did it make you feel?', required: true }
         ]}
         tagType="both"

@@ -38,15 +38,15 @@ export default function SnapsPage() {
   
   const snaps = [...staticSnaps, ...fetchedSnaps]
 
-  const handleAddSnap = async (data: Record<string, unknown>) => {
+  const handleAddSnap = async (data: Record<string, any>) => {
+    const formData = new FormData()
+    if (data.image) formData.append('image', data.image)
+    if (data.description) formData.append('description', data.description)
+    if (data.tags) formData.append('tags', JSON.stringify(data.tags))
+
     const response = await fetch(`${API_BASE_URL}/api/snaps`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        image: data.image,
-        description: data.description,
-        tags: data.tags
-      })
+      body: formData
     })
     
     if (response.ok) {
@@ -55,7 +55,7 @@ export default function SnapsPage() {
     }
   }
 
-  const handleUpdateSnap = async (data: Record<string, unknown>) => {
+  const handleUpdateSnap = async (data: Record<string, any>) => {
     if (!editingSnap) return
     if (editingSnap.id.startsWith('static-')) {
       toast.error("Static snaps cannot be edited directly.")
@@ -63,14 +63,14 @@ export default function SnapsPage() {
     }
     try {
       const id = (editingSnap._id || editingSnap.id).split(':')[0]
+      const formData = new FormData()
+      if (data.image) formData.append('image', data.image)
+      if (data.description) formData.append('description', data.description)
+      if (data.tags) formData.append('tags', JSON.stringify(data.tags))
+
       const response = await fetch(`${API_BASE_URL}/api/snaps/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          image: data.image,
-          description: data.description,
-          tags: data.tags
-        })
+        body: formData
       })
       
       if (response.ok) {
@@ -232,13 +232,9 @@ export default function SnapsPage() {
         fields={[
           { 
             name: 'image', 
-            label: 'Select Image', 
-            type: 'select', 
-            required: true,
-            options: SNAP_ASSETS.map(asset => ({
-              label: asset.split('/').pop() || asset,
-              value: asset
-            }))
+            label: 'Select or Upload Image', 
+            type: 'file', 
+            required: true
           },
           { name: 'description', label: 'Description', type: 'textarea', placeholder: 'What happened in this moment?', required: true }
         ]}

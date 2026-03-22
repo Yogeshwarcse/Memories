@@ -17,7 +17,7 @@ interface AddItemModalProps {
   fields: {
     name: string
     label: string
-    type: 'text' | 'textarea' | 'date' | 'url' | 'select'
+    type: 'text' | 'textarea' | 'date' | 'url' | 'select' | 'file'
     placeholder?: string
     required?: boolean
     options?: { label: string; value: string }[]
@@ -38,7 +38,7 @@ export function AddItemModal({
   tagType = 'both',
   initialData
 }: AddItemModalProps) {
-  const [formData, setFormData] = useState<Record<string, string>>({})
+  const [formData, setFormData] = useState<Record<string, any>>({})
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -46,10 +46,10 @@ export function AddItemModal({
 
   useEffect(() => {
     if (isOpen && initialData) {
-      const data: Record<string, string> = {}
+      const data: Record<string, any> = {}
       fields.forEach(field => {
         if (initialData[field.name] !== undefined && initialData[field.name] !== null) {
-          data[field.name] = String(initialData[field.name])
+          data[field.name] = initialData[field.name]
         }
       })
       setFormData(data)
@@ -147,6 +147,20 @@ export function AddItemModal({
                       </option>
                     ))}
                   </select>
+                ) : field.type === 'file' ? (
+                  <Input
+                    id={field.name}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        setFormData(prev => ({ ...prev, [field.name]: file }))
+                      }
+                    }}
+                    required={field.required && !isEditing}
+                    className="cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                  />
                 ) : (
                   <Input
                     id={field.name}

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const FavoriteDay = require('../models/FavoriteDay');
+const upload = require('../middleware/upload');
 
 // GET all
 router.get('/', async (req, res) => {
@@ -13,12 +14,22 @@ router.get('/', async (req, res) => {
 });
 
 // POST
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
+  let imageUrl = req.body.image;
+  if (req.file) {
+    imageUrl = `/uploads/${req.file.filename}`;
+  }
+
+  let tags = req.body.tags;
+  if (typeof tags === 'string') {
+    try { tags = JSON.parse(tags); } catch { tags = tags.split(',').map(tag => tag.trim()); }
+  }
+
   const item = new FavoriteDay({
     date: req.body.date,
-    image: req.body.image,
+    image: imageUrl,
     description: req.body.description,
-    tags: req.body.tags
+    tags: tags
   });
   try {
     const newItem = await item.save();
@@ -40,12 +51,22 @@ router.delete('/', async (req, res) => {
 });
 
 // PUT (Update)
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('image'), async (req, res) => {
   try {
     const id = req.params.id.split(':')[0];
+    
+    const updateData = { ...req.body };
+    if (typeof updateData.tags === 'string') {
+      try { updateData.tags = JSON.parse(updateData.tags); } 
+      catch { updateData.tags = updateData.tags.split(',').map(tag => tag.trim()); }
+    }
+    if (req.file) {
+      updateData.image = `/uploads/${req.file.filename}`;
+    }
+
     const updatedItem = await FavoriteDay.findByIdAndUpdate(
       id,
-      { $set: req.body },
+      { $set: updateData },
       { new: true }
     );
     if (!updatedItem) {

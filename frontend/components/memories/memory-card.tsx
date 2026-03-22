@@ -2,9 +2,9 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Calendar, MoreVertical, Pencil, Trash2, Heart } from 'lucide-react'
 import { format } from 'date-fns'
 import type { Memory } from '@/lib/types'
+import { API_BASE_URL } from '@/lib/api-config'
 import { TagBadge } from '@/components/tag-badge'
 import {
   DropdownMenu,
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Heart, MoreVertical, Pencil, Trash2, Calendar } from 'lucide-react'
 
 interface MemoryCardProps {
   memory: Memory
@@ -22,6 +23,8 @@ interface MemoryCardProps {
 }
 
 export function MemoryCard({ memory, index, onEdit, onDelete, priority }: MemoryCardProps) {
+  const imageUrl = memory.image?.startsWith('/uploads/') ? `${API_BASE_URL}${memory.image}` : (memory.image || '/placeholder-memory.jpg')
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -33,7 +36,7 @@ export function MemoryCard({ memory, index, onEdit, onDelete, priority }: Memory
       {/* Image Section */}
       <div className="relative h-48 md:h-56">
         <Image
-          src={memory.image || '/placeholder-memory.jpg'}
+          src={imageUrl}
           alt={memory.description}
           fill
           priority={priority}

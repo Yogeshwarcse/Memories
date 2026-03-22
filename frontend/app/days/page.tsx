@@ -23,16 +23,16 @@ export default function DaysPage() {
 
   const days = Array.isArray(data) ? data : []
 
-  const handleAddDay = async (data: Record<string, unknown>) => {
+  const handleAddDay = async (data: Record<string, any>) => {
+    const formData = new FormData()
+    if (data.date) formData.append('date', data.date)
+    if (data.image) formData.append('image', data.image)
+    if (data.description) formData.append('description', data.description)
+    if (data.tags) formData.append('tags', JSON.stringify(data.tags))
+
     const response = await fetch(`${API_BASE_URL}/api/favorite-days`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        date: data.date,
-        image: data.image,
-        description: data.description,
-        tags: data.tags
-      })
+      body: formData
     })
     
     if (response.ok) {
@@ -41,19 +41,19 @@ export default function DaysPage() {
     }
   }
 
-  const handleUpdateDay = async (data: Record<string, unknown>) => {
+  const handleUpdateDay = async (data: Record<string, any>) => {
     if (!editingDay) return
     try {
       const id = (editingDay._id || editingDay.id).split(':')[0]
+      const formData = new FormData()
+      if (data.date) formData.append('date', data.date)
+      if (data.image) formData.append('image', data.image)
+      if (data.description) formData.append('description', data.description)
+      if (data.tags) formData.append('tags', JSON.stringify(data.tags))
+
       const response = await fetch(`${API_BASE_URL}/api/favorite-days/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          date: data.date,
-          image: data.image,
-          description: data.description,
-          tags: data.tags
-        })
+        body: formData
       })
       
       if (response.ok) {
@@ -167,7 +167,7 @@ export default function DaysPage() {
         initialData={editingDay ? (editingDay as unknown as Record<string, unknown>) : undefined}
         fields={[
           { name: 'date', label: 'Date', type: 'date', required: true },
-          { name: 'image', label: 'Image URL', type: 'url', placeholder: 'https://...' },
+          { name: 'image', label: 'Select or Upload Image', type: 'file' },
           { name: 'description', label: 'What made this day special?', type: 'textarea', placeholder: 'Tell the story of this day...', required: true }
         ]}
         tagType="both"

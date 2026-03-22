@@ -2,8 +2,8 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Expand, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import type { Snap } from '@/lib/types'
+import { API_BASE_URL } from '@/lib/api-config'
 import { TagBadge } from '@/components/tag-badge'
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Expand, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 
 interface SnapCardProps {
   snap: Snap
@@ -21,6 +22,8 @@ interface SnapCardProps {
 }
 
 export function SnapCard({ snap, onView, onEdit, onDelete, priority = false }: SnapCardProps) {
+  const imageUrl = snap.image?.startsWith('/uploads/') ? `${API_BASE_URL}${snap.image}` : (snap.image || '/placeholder-snap.jpg')
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -30,7 +33,7 @@ export function SnapCard({ snap, onView, onEdit, onDelete, priority = false }: S
       onClick={onView}
     >
       <Image
-        src={snap.image || '/placeholder-snap.jpg'}
+        src={imageUrl}
         alt={snap.description}
         fill
         priority={priority}

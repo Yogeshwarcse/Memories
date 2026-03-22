@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Calendar, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { FavoriteDay } from '@/lib/types'
+import { API_BASE_URL } from '@/lib/api-config'
 import { TagBadge } from '@/components/tag-badge'
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ interface TimelineCardProps {
 
 export function TimelineCard({ day, index, onEdit, onDelete, priority = false }: TimelineCardProps) {
   const isLeft = index % 2 === 0
+  const imageUrl = day.image?.startsWith('/uploads/') ? `${API_BASE_URL}${day.image}` : (day.image || '/placeholder-day.jpg')
 
   return (
     <motion.div
@@ -36,7 +38,7 @@ export function TimelineCard({ day, index, onEdit, onDelete, priority = false }:
       <div className="group flex-1 glass rounded-2xl overflow-hidden flex flex-col h-full">
         <div className="relative aspect-square">
           <Image
-            src={day.image || '/placeholder-day.jpg'}
+            src={imageUrl}
             alt={day.description}
             fill
             priority={priority}

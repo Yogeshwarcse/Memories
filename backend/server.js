@@ -14,6 +14,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/songs', express.static('public/songs'));
+app.use('/uploads', express.static('public/uploads'));
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ourmemories';
