@@ -32,7 +32,11 @@ export function ThingCard({ thing, index, onEdit, onDelete, priority }: ThingCar
       {/* Image */}
       <div className="relative aspect-square">
         <Image
-          src={thing.image || '/placeholder-thing.jpg'}
+          src={thing.image?.startsWith('data:') 
+            ? thing.image 
+            : thing.image?.startsWith('http') 
+              ? thing.image 
+              : '/placeholder.jpg'}
           alt={thing.description}
           fill
           priority={priority}

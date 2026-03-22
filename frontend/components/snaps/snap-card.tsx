@@ -30,7 +30,7 @@ export function SnapCard({ snap, onView, onEdit, onDelete, priority = false }: S
         ? `${API_BASE_URL}${snap.image}` 
         : snap.image?.startsWith('/assets/') 
           ? snap.image 
-          : '/placeholder-memory.jpg'
+          : '/placeholder.jpg'
 
   return (
     <motion.div

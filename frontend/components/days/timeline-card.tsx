@@ -24,13 +24,15 @@ interface TimelineCardProps {
 
 export function TimelineCard({ day, index, onEdit, onDelete, priority = false }: TimelineCardProps) {
   const isLeft = index % 2 === 0
-  const imageUrl = day.image?.startsWith('http')
+  const imageUrl = day.image?.startsWith('data:')
     ? day.image
-    : day.image?.startsWith('/uploads/') 
-      ? `${API_BASE_URL}${day.image}` 
-      : day.image?.startsWith('/') 
-        ? day.image 
-        : '/placeholder-day.jpg'
+    : day.image?.startsWith('http')
+      ? day.image
+      : day.image?.startsWith('/uploads/')
+        ? `${API_BASE_URL}${day.image}`
+        : day.image?.startsWith('/assets/')
+          ? day.image
+          : '/placeholder.jpg'
 
   return (
     <motion.div
@@ -51,7 +53,7 @@ export function TimelineCard({ day, index, onEdit, onDelete, priority = false }:
             className="object-cover transition-transform group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
-          
+
           {/* Date badge */}
           <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/90 backdrop-blur-sm">
             <Calendar className="h-4 w-4 text-primary" />
