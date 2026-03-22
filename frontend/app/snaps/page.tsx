@@ -28,15 +28,7 @@ export default function SnapsPage() {
 
   const fetchedSnaps = Array.isArray(data) ? data : []
   
-  const staticSnaps: Snap[] = SNAP_ASSETS.map((src, index) => ({
-    id: `static-${index}`,
-    image: src,
-    description: `Snap Memory`,
-    tags: ['Gallery'],
-    createdAt: new Date().toISOString(),
-  }))
-  
-  const snaps = [...staticSnaps, ...fetchedSnaps]
+  const snaps = fetchedSnaps
 
   const handleAddSnap = async (data: Record<string, any>) => {
     const formData = new FormData()

@@ -22,7 +22,11 @@ interface SnapCardProps {
 }
 
 export function SnapCard({ snap, onView, onEdit, onDelete, priority = false }: SnapCardProps) {
-  const imageUrl = snap.image?.startsWith('/uploads/') ? `${API_BASE_URL}${snap.image}` : (snap.image || '/placeholder-snap.jpg')
+  const imageUrl = snap.image?.startsWith('/uploads/') 
+    ? `${API_BASE_URL}${snap.image}` 
+    : snap.image?.startsWith('/assets/') 
+      ? snap.image 
+      : '/placeholder-memory.jpg'
 
   return (
     <motion.div

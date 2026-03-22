@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
+import { HeartsBackground } from '@/components/hearts-background'
 
 const pageVariants = {
   hidden: { opacity: 0, y: 30, filter: 'blur(8px)', scale: 0.98 },
@@ -30,6 +31,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
       animate="enter"
       className="min-h-screen"
     >
+      <HeartsBackground />
       {children}
     </motion.div>
   )

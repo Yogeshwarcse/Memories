@@ -234,17 +234,7 @@ export function AddSongModal({ isOpen, onClose, onSubmit, editingSong }: AddSong
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="coverImage">Cover Image URL</Label>
-              <Input
-                id="coverImage"
-                type="text"
-                value={coverImage}
-                onChange={(e) => setCoverImage(e.target.value)}
-                placeholder="https://..."
-                className="rounded-xl"
-              />
-            </div>
+
 
             <div className="space-y-2">
               <Label htmlFor="audioUrl">Audio Source URL</Label>

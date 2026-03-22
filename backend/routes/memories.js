@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
 // POST
 router.post('/', upload.single('image'), async (req, res) => {
-  let imageUrl = req.body.image;
+  let imageUrl = '';
   if (req.file) {
     imageUrl = `/uploads/${req.file.filename}`;
   }
@@ -62,6 +62,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     }
     if (req.file) {
       updateData.image = `/uploads/${req.file.filename}`;
+    } else {
+      delete updateData.image; // Don't allow updating image to a string/URL via body
     }
 
     const updatedItem = await Memory.findByIdAndUpdate(

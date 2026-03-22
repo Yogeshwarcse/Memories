@@ -17,7 +17,7 @@ interface AddItemModalProps {
   fields: {
     name: string
     label: string
-    type: 'text' | 'textarea' | 'date' | 'url' | 'select' | 'file'
+    type: 'text' | 'textarea' | 'date' | 'select' | 'file'
     placeholder?: string
     required?: boolean
     options?: { label: string; value: string }[]
