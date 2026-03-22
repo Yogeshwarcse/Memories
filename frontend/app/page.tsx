@@ -18,7 +18,7 @@ const modules = [
   {
     href: '/songs',
     title: 'Our Favorite Songs',
-    description: 'The soundtrack of our love story',
+    description: 'The soundtrack of our cute story',
     icon: Music,
     gradient: 'from-pink-400 to-rose-400',
     delay: 0.1

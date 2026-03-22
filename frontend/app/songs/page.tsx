@@ -94,7 +94,7 @@ export default function SongsPage() {
       <main className="container mx-auto px-4 pt-32 pb-40">
         <PageHeader 
           title="Our Favorite Songs"
-          subtitle="The soundtrack of our love story"
+          subtitle="The soundtrack of our cute story"
           icon={Music}
         />
 
